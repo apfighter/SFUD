@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "app.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -78,7 +78,16 @@ void thread_entry_sys_monitor(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+#ifdef __GNUC__
+  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif
+PUTCHAR_PROTOTYPE
+{
+    HAL_UART_Transmit(&huart7, (uint8_t *)&ch, 1, 0xFF);
+    return ch;
+}
 /* USER CODE END 0 */
 
 /**
@@ -347,6 +356,7 @@ void thread_entry_sys_monitor(void *argument)
   for(;;)
   {
     osDelay(1);
+    apploop();
   }
   /* USER CODE END thread_entry_sys_monitor */
 }
