@@ -1,4 +1,3 @@
-
 #ifndef __APP_H
 #define __APP_H
 
@@ -12,6 +11,6 @@
 #define LED2_OFF    HAL_GPIO_WritePin(GPIOD, LED2_Pin, GPIO_PIN_SET)
 #define LED2_TOGGLE HAL_GPIO_TogglePin(GPIOD, LED2_Pin)
 
-void apploop(void);
+void app_loop(void);
 
 #endif //__APP_H

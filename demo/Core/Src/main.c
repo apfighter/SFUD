@@ -356,7 +356,7 @@ void thread_entry_sys_monitor(void *argument)
   for(;;)
   {
     osDelay(1);
-    apploop();
+    app_loop();
   }
   /* USER CODE END thread_entry_sys_monitor */
 }
