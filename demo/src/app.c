@@ -7,14 +7,15 @@
 static uint32_t app_exec_count = 0;
 
 #define SFUD_DEMO_TEST_BUFFER_SIZE                     1024
-
 static void sfud_demo(uint32_t addr, size_t size, uint8_t *data);
-
 static uint8_t sfud_demo_test_buf[SFUD_DEMO_TEST_BUFFER_SIZE];
 
+#define __TEST
+#ifdef __TEST
 #define BUF_SIZE (256)
 static uint8_t M25_WRITE_BUF[BUF_SIZE] = {0};
 static uint8_t M25_READ_BUF[BUF_SIZE] = {0};
+#endif
 
 void app_loop(void)
 {
@@ -25,6 +26,7 @@ void app_loop(void)
         LED1_TOGGLE;
         LED2_TOGGLE;
 
+#ifdef __TEST
         for (uint32_t i=0; i<BUF_SIZE; i++)
         {
             M25_WRITE_BUF[i] = i;
@@ -32,13 +34,14 @@ void app_loop(void)
         W25QXX_Write(M25_WRITE_BUF, 0, BUF_SIZE);
 
         W25QXX_Read(M25_READ_BUF, 0, BUF_SIZE);
-        for (uint32_t i=0; i<32; i++)
+
+        if (memcmp(M25_WRITE_BUF, M25_READ_BUF, BUF_SIZE) == 0)
         {
-            printf("0x%x\r\n", M25_READ_BUF[i]);
+            printf("mx25 test pass\r\n");
         }
-        printf("\r\n");
 
         memset(M25_READ_BUF, 0, BUF_SIZE);
+#endif
 
         printf("time: %s:%s, fighter app is running\r\n", __DATE__, __TIME__);
     }
