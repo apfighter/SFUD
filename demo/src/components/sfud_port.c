@@ -29,6 +29,8 @@
 #include "stdarg.h"
 #include "app.h"
 #include "sfud_def.h"
+#include "stdio.h"
+#include "stdlib.h"
 
 static const char *TAG = "SFUD";
 
@@ -50,6 +52,55 @@ static inline void spi_unlock(const sfud_spi *spi) {
 static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, size_t write_size, uint8_t *read_buf,
                                size_t read_size) {
     sfud_err result = SFUD_SUCCESS;
+    uint8_t send_data, read_data;
+
+    if (write_size) {
+        SFUD_ASSERT(write_buf);
+    }
+    if (read_size) {
+        SFUD_ASSERT(read_buf);
+    }
+
+    SPI4_CS_LOW();
+
+    /* 开始读写数据 */
+    for (size_t i = 0, retry_times; i < write_size + read_size; i++) {
+        /* 先写缓冲区中的数据到 SPI 总线，数据写完后，再写 dummy(0xFF) 到 SPI 总线 */
+        if (i < write_size) {
+            send_data = *write_buf++;
+        } else {
+            send_data = SFUD_DUMMY_DATA;
+        }
+        /* 发送数据 */
+        // retry_times = 1000;
+        // while (__HAL_SPI_GET_FLAG(&hspi4, SPI_FLAG_TXE) == RESET) {
+        //     SFUD_RETRY_PROCESS(NULL, retry_times, result);
+        // }
+        // if (result != SFUD_SUCCESS) {
+        //     goto exit;
+        // }
+        // HAL_SPI_Transmit(&hspi4, &send_data, 1, 0xFF);
+        // /* 接收数据 */
+        // retry_times = 1000;
+
+        // while (__HAL_SPI_GET_FLAG(&hspi4, SPI_FLAG_RXNE) == RESET) {
+        //     SFUD_RETRY_PROCESS(NULL, retry_times, result);
+        // }
+        // if (result != SFUD_SUCCESS) {
+        //     goto exit;
+        // }
+        // HAL_SPI_Receive(&hspi4, &read_data, 1, 0xFF);
+
+        HAL_SPI_TransmitReceive(&hspi4, &send_data, &read_data, 1, 0xFF);
+
+        /* 写缓冲区中的数据发完后，再读取 SPI 总线中的数据到读缓冲区 */
+        if (i >= write_size) {
+            *read_buf++ = read_data;
+        }
+    }
+
+exit:
+    SPI4_CS_HIGH();
 
     return result;
 }
@@ -87,7 +138,10 @@ sfud_err sfud_spi_port_init(sfud_flash *flash) {
     flash->spi.lock = spi_lock;
     flash->spi.unlock = spi_unlock;
 
+#ifdef SFUD_USING_QSPI
     flash->spi.qspi_read = qspi_read;
+#endif
+    flash->spi.user_data = NULL;
 
     /* about 100 microsecond delay */
     flash->retry.delay = retry_delay_100us;

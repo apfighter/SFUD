@@ -10,15 +10,27 @@ static uint32_t app_exec_count = 0;
 static void sfud_demo(uint32_t addr, size_t size, uint8_t *data);
 static uint8_t sfud_demo_test_buf[SFUD_DEMO_TEST_BUFFER_SIZE];
 
-#define __TEST
+// #define __TEST
 #ifdef __TEST
 #define BUF_SIZE (256)
 static uint8_t M25_WRITE_BUF[BUF_SIZE] = {0};
 static uint8_t M25_READ_BUF[BUF_SIZE] = {0};
 #endif
 
+static uint8_t sfud_inited = 0;
+
 void app_loop(void)
 {
+    if (sfud_inited == 0)
+    {
+        sfud_inited = 1;
+
+        /* SFUD initialize */
+        if (sfud_init() == SFUD_SUCCESS)
+        {
+            sfud_demo(0, sizeof(sfud_demo_test_buf), sfud_demo_test_buf);
+        }
+    }
     if (app_exec_count++ > 1000)
     {
     	app_exec_count = 0;
