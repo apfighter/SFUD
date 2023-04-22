@@ -13,8 +13,8 @@
 #define LED2_OFF    HAL_GPIO_WritePin(GPIOD, LED2_Pin, GPIO_PIN_SET)
 #define LED2_TOGGLE HAL_GPIO_TogglePin(GPIOD, LED2_Pin)
 
-#define SPI4_CS_HIGH() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4, GPIO_PIN_SET)
-#define SPI4_CS_LOW()  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4, GPIO_PIN_RESET)
+#define SPI4_CS_HIGH() HAL_GPIO_WritePin(M25X_CS_GPIO_Port, M25X_CS_Pin, GPIO_PIN_SET)
+#define SPI4_CS_LOW()  HAL_GPIO_WritePin(M25X_CS_GPIO_Port, M25X_CS_Pin, GPIO_PIN_RESET)
 
 void app_loop(void);
 

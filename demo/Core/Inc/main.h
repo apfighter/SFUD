@@ -58,6 +58,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define M25X_CS_Pin GPIO_PIN_4
+#define M25X_CS_GPIO_Port GPIOE
 #define LED1_Pin GPIO_PIN_14
 #define LED1_GPIO_Port GPIOD
 #define LED2_Pin GPIO_PIN_15
