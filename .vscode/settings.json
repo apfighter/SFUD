@@ -4,6 +4,7 @@
         "w25qxx.h": "c",
         "app.h": "c",
         "stm32f7xx_hal.h": "c",
-        "cmsis_os.h": "c"
+        "cmsis_os.h": "c",
+        "sfud_def.h": "c"
     }
 }
