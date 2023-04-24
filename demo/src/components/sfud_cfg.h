@@ -31,6 +31,9 @@
 
 #define SFUD_DEBUG_MODE
 
+#define SFUD_DEBUG
+#define SFUD_INFO
+
 #define SFUD_USING_SFDP
 
 #define SFUD_USING_FLASH_INFO_TABLE
@@ -41,7 +44,7 @@ enum {
 
 #define SFUD_FLASH_DEVICE_TABLE                                                \
 {                                                                              \
-    [SFUD_W25Q128_DEVICE_INDEX] = {.name = "W25Q128", .spi.name = "spi2"},           \
+    [SFUD_W25Q128_DEVICE_INDEX] = {.name = "MX25L128", .spi.name = "spi4"},           \
 }
 
 //#define SFUD_USING_QSPI

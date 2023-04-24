@@ -32,8 +32,6 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-static const char *TAG = "SFUD";
-
 static char log_buf[256];
 
 void sfud_log_debug(const char *file, const long line, const char *format, ...);
@@ -132,7 +130,7 @@ static void retry_delay_100us() { //TODO
 sfud_err sfud_spi_port_init(sfud_flash *flash) {
     sfud_err result = SFUD_SUCCESS;
 
-    printf(TAG, "Initializing SPI bus...");
+    printf("Initializing SPI bus...\r\n");
 
     flash->spi.wr = spi_write_read;
     flash->spi.lock = spi_lock;
@@ -166,7 +164,7 @@ void sfud_log_debug(const char *file, const long line, const char *format, ...) 
     va_start(args, format);
     /* must use vprintf to print */
     vsnprintf(log_buf, sizeof(log_buf), format, args);
-    printf(TAG, "(%s:%ld)%s", file, line, log_buf);
+    printf("%s\r\n", log_buf);
     va_end(args);
 }
 
@@ -183,6 +181,6 @@ void sfud_log_info(const char *format, ...) {
     va_start(args, format);
     /* must use vprintf to print */
     vsnprintf(log_buf, sizeof(log_buf), format, args);
-    printf(TAG, "%s", log_buf);
+    printf("%s\r\n", log_buf);
     va_end(args);
 }

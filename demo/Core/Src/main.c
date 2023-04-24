@@ -121,8 +121,8 @@ int main(void)
   MX_SPI4_Init();
   MX_UART7_Init();
   /* USER CODE BEGIN 2 */
-  W25QXX_Init();
-  printf("detect flash id = 0x%x\r\n", W25QXX_ReadID());
+//   W25QXX_Init();
+//   printf("detect flash id = 0x%x\r\n", W25QXX_ReadID());
   /* USER CODE END 2 */
 
   /* Init scheduler */
