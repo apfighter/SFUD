@@ -62,7 +62,7 @@ static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, si
     SPI4_CS_LOW();
 
     /* 开始读写数据 */
-    for (size_t i = 0, retry_times; i < write_size + read_size; i++) {
+    for (size_t i = 0; i < write_size + read_size; i++) {
         /* 先写缓冲区中的数据到 SPI 总线，数据写完后，再写 dummy(0xFF) 到 SPI 总线 */
         if (i < write_size) {
             send_data = *write_buf++;
@@ -97,7 +97,6 @@ static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, si
         }
     }
 
-exit:
     SPI4_CS_HIGH();
 
     return result;
