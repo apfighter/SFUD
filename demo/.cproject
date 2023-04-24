@@ -98,8 +98,6 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm3272xx_freertos/src}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm3272xx_freertos/sfud/inc}&quot;"/>
-                                    									
-                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm3272xx_freertos/src/components}&quot;"/>
                                     								
                                 </option>
                                 								
