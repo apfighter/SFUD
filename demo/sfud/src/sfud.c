@@ -1043,3 +1043,22 @@ sfud_err sfud_write_status(const sfud_flash *flash, bool is_volatile, uint8_t st
 
     return result;
 }
+
+sfud_err sfud_device_register(char *device_name, sfud_flash *flash)
+{
+    size_t i;
+
+    for (i = 0; i < sizeof(flash_table) / sizeof(sfud_flash); i++) {
+        if (strcmp(flash_table[i].name, device_name) == 0) {
+            flash_table[i].spi = flash->spi;
+            flash_table[i].spi.user_data = NULL;
+            /* about 100 microsecond delay */
+            flash_table[i].retry.delay = flash->retry.delay;
+            /* adout 60 seconds timeout */
+            flash_table[i].retry.times = 60 * 10000;
+            return SFUD_SUCCESS;
+        }
+    }
+
+    return SFUD_ERR_NOT_FOUND;
+}

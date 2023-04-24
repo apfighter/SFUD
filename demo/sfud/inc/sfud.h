@@ -171,6 +171,16 @@ sfud_err sfud_read_status(const sfud_flash *flash, uint8_t *status);
  */
 sfud_err sfud_write_status(const sfud_flash *flash, bool is_volatile, uint8_t status);
 
+/**
+ * sfud device register
+ *
+ * @param device_name flash device name
+ * @param flash flash device
+ *
+ * @return result
+ */
+sfud_err sfud_device_register(char *device_name, sfud_flash *flash);
+
 #ifdef __cplusplus
 }
 #endif
