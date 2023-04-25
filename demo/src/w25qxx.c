@@ -15,7 +15,7 @@ uint8_t SPI4_ReadWriteByte(uint8_t tx)
 // 初始化SPI FLASH的IO口
 void W25QXX_Init(void)
 {
-    SPI4_CS_HIGH(); // SPI FLASH不选中
+    MX25_CS_HIGH(); // SPI FLASH不选中
     W25QXX_WAKEUP();
 }
 
@@ -30,10 +30,10 @@ void W25QXX_Init(void)
 uint8_t W25QXX_ReadSR(void)
 {
     uint8_t byte = 0;
-    SPI4_CS_LOW();                          // 使能器件
+    MX25_CS_LOW();                          // 使能器件
     SPI4_ReadWriteByte(W25X_ReadStatusReg); // 发送读取状态寄存器命令
     byte = SPI4_ReadWriteByte(0Xff);        // 读取一个字节
-    SPI4_CS_HIGH();                         // 取消片选
+    MX25_CS_HIGH();                         // 取消片选
     return byte;
 }
 
@@ -41,28 +41,28 @@ uint8_t W25QXX_ReadSR(void)
 // 只有SPR,TB,BP2,BP1,BP0(bit 7,5,4,3,2)可以写!!!
 void W25QXX_Write_SR(uint8_t sr)
 {
-    SPI4_CS_LOW();                           // 使能器件
+    MX25_CS_LOW();                           // 使能器件
     SPI4_ReadWriteByte(W25X_WriteStatusReg); // 发送写取状态寄存器命令
     SPI4_ReadWriteByte(sr);                  // 写入一个字节
-    SPI4_CS_HIGH();                          // 取消片选
+    MX25_CS_HIGH();                          // 取消片选
 }
 
 // W25QXX写使能
 // 将WEL置位
 void W25QXX_Write_Enable(void)
 {
-    SPI4_CS_LOW();                        // 使能器件
+    MX25_CS_LOW();                        // 使能器件
     SPI4_ReadWriteByte(W25X_WriteEnable); // 发送写使能
-    SPI4_CS_HIGH();                       // 取消片选
+    MX25_CS_HIGH();                       // 取消片选
 }
 
 // W25QXX写禁止
 // 将WEL清零
 void W25QXX_Write_Disable(void)
 {
-    SPI4_CS_LOW();                         // 使能器件
+    MX25_CS_LOW();                         // 使能器件
     SPI4_ReadWriteByte(W25X_WriteDisable); // 发送写禁止指令
-    SPI4_CS_HIGH();                        // 取消片选
+    MX25_CS_HIGH();                        // 取消片选
 }
 
 // 读取芯片ID
@@ -75,14 +75,14 @@ void W25QXX_Write_Disable(void)
 uint16_t W25QXX_ReadID(void)
 {
     uint16_t Temp = 0;
-    SPI4_CS_LOW();
+    MX25_CS_LOW();
     SPI4_ReadWriteByte(0x90); // 发送读取ID命令
     SPI4_ReadWriteByte(0x00);
     SPI4_ReadWriteByte(0x00);
     SPI4_ReadWriteByte(0x00);
     Temp |= SPI4_ReadWriteByte(0xFF) << 8;
     Temp |= SPI4_ReadWriteByte(0xFF);
-    SPI4_CS_HIGH();
+    MX25_CS_HIGH();
     return Temp;
 }
 
@@ -96,7 +96,7 @@ void W25QXX_Read(uint8_t *pBuffer, uint32_t ReadAddr, uint16_t NumByteToRead)
     uint16_t i;
 
     W25QXX_Wait_Busy();
-    SPI4_CS_LOW();                                   // 使能器件
+    MX25_CS_LOW();                                   // 使能器件
     SPI4_ReadWriteByte(W25X_ReadData);               // 发送读取命令
     SPI4_ReadWriteByte((uint8_t)((ReadAddr) >> 16)); // 发送24bit地址
     SPI4_ReadWriteByte((uint8_t)((ReadAddr) >> 8));
@@ -105,7 +105,7 @@ void W25QXX_Read(uint8_t *pBuffer, uint32_t ReadAddr, uint16_t NumByteToRead)
     {
         pBuffer[i] = SPI4_ReadWriteByte(0XFF); // 循环读数
     }
-    SPI4_CS_HIGH();
+    MX25_CS_HIGH();
 }
 
 // SPI在一页(0~65535)内写入少于256个字节的数据
@@ -118,14 +118,14 @@ void W25QXX_Write_Page(uint8_t *pBuffer, uint32_t WriteAddr, uint16_t NumByteToW
     uint16_t i;
     W25QXX_Wait_Busy();                               // 等待写入结束
     W25QXX_Write_Enable();                            // SET WEL
-    SPI4_CS_LOW();                                    // 使能器件
+    MX25_CS_LOW();                                    // 使能器件
     SPI4_ReadWriteByte(W25X_PageProgram);             // 发送写页命令
     SPI4_ReadWriteByte((uint8_t)((WriteAddr) >> 16)); // 发送24bit地址
     SPI4_ReadWriteByte((uint8_t)((WriteAddr) >> 8));
     SPI4_ReadWriteByte((uint8_t)WriteAddr);
     for (i = 0; i < NumByteToWrite; i++)
         SPI4_ReadWriteByte(pBuffer[i]); // 循环写数
-    SPI4_CS_HIGH();                     // 取消片选
+    MX25_CS_HIGH();                     // 取消片选
 }
 
 // 无检验写SPI FLASH
@@ -225,9 +225,9 @@ void W25QXX_Erase_Chip(void)
 {
     W25QXX_Write_Enable(); // SET WEL
     W25QXX_Wait_Busy();
-    SPI4_CS_LOW();                      // 使能器件
+    MX25_CS_LOW();                      // 使能器件
     SPI4_ReadWriteByte(W25X_ChipErase); // 发送片擦除命令
-    SPI4_CS_HIGH();                     // 取消片选
+    MX25_CS_HIGH();                     // 取消片选
     W25QXX_Wait_Busy();                 // 等待芯片擦除结束
 }
 
@@ -238,12 +238,12 @@ void W25QXX_Erase_Sector(uint32_t Dst_Addr)
 {
     W25QXX_Write_Enable(); // SET WEL
     W25QXX_Wait_Busy();
-    SPI4_CS_LOW();                                   // 使能器件
+    MX25_CS_LOW();                                   // 使能器件
     SPI4_ReadWriteByte(W25X_SectorErase);            // 发送扇区擦除指令
     SPI4_ReadWriteByte((uint8_t)((Dst_Addr) >> 16)); // 发送24bit地址
     SPI4_ReadWriteByte((uint8_t)((Dst_Addr) >> 8));
     SPI4_ReadWriteByte((uint8_t)Dst_Addr);
-    SPI4_CS_HIGH();     // 取消片选
+    MX25_CS_HIGH();     // 取消片选
     W25QXX_Wait_Busy(); // 等待擦除完成
 }
 
@@ -257,17 +257,17 @@ void W25QXX_Wait_Busy(void)
 // 进入掉电模式
 void W25QXX_PowerDown(void)
 {
-    SPI4_CS_LOW();                      // 使能器件
+    MX25_CS_LOW();                      // 使能器件
     SPI4_ReadWriteByte(W25X_PowerDown); // 发送掉电命令
-    SPI4_CS_HIGH();                     // 取消片选
+    MX25_CS_HIGH();                     // 取消片选
     HAL_Delay(1);                       // 等待TPD
 }
 
 // 唤醒
 void W25QXX_WAKEUP(void)
 {
-    SPI4_CS_LOW();                             // 使能器件
+    MX25_CS_LOW();                             // 使能器件
     SPI4_ReadWriteByte(W25X_ReleasePowerDown); //  send W25X_PowerDown command 0xAB
-    SPI4_CS_HIGH();                            // 取消片选
+    MX25_CS_HIGH();                            // 取消片选
     HAL_Delay(1);                              // 等待TRES1
 }

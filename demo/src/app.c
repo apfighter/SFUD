@@ -3,6 +3,13 @@
 #include "string.h"
 #include "sfud.h"
 
+typedef struct
+{
+    SPI_HandleTypeDef *spix;
+    GPIO_TypeDef      *cs_gpiox;
+    uint32_t           cs_gpio_pin;
+} spi_user_data, *spi_user_data_t;
+
 static inline void spi_lock(const sfud_spi *spi)
 {
     __disable_irq();
@@ -21,6 +28,12 @@ static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, si
     sfud_err result = SFUD_SUCCESS;
     uint8_t send_data, read_data;
 
+    spi_user_data_t spi_dev = (spi_user_data_t) spi->user_data;
+    if (!spi_dev)
+    {
+        return SFUD_ERR_NOT_FOUND;
+    }
+
     if (write_size)
     {
         SFUD_ASSERT(write_buf);
@@ -30,7 +43,7 @@ static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, si
         SFUD_ASSERT(read_buf);
     }
 
-    SPI4_CS_LOW();
+    HAL_GPIO_WritePin(spi_dev->cs_gpiox, spi_dev->cs_gpio_pin, GPIO_PIN_RESET);
 
     /* 开始读写数据 */
     for (size_t i = 0; i < write_size + read_size; i++)
@@ -54,7 +67,7 @@ static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, si
         }
     }
 
-    SPI4_CS_HIGH();
+    HAL_GPIO_WritePin(spi_dev->cs_gpiox, spi_dev->cs_gpio_pin, GPIO_PIN_SET);
 
     return result;
 }
@@ -72,7 +85,8 @@ static uint8_t sfud_demo_test_buf[SFUD_DEMO_TEST_BUFFER_SIZE];
 static uint32_t app_exec_count = 0;
 static uint32_t sfud_inited    = 0;
 
-static sfud_flash flash;
+static spi_user_data spi4 = { .spix = &hspi4, .cs_gpiox = M25X_CS_GPIO_Port, .cs_gpio_pin = M25X_CS_Pin };
+static sfud_flash    flash;
 
 void app_loop(void)
 {
@@ -84,7 +98,7 @@ void app_loop(void)
 #ifdef SFUD_USING_QSPI
         flash.spi.qspi_read = NULL;
 #endif
-        flash.spi.user_data = NULL;
+        flash.spi.user_data = &spi4;
         flash.retry.delay   = retry_delay_100us;  /* about 100 microsecond delay */
         flash.retry.times   = 60 * 10000;         /* adout 60 seconds timeout */
 
@@ -98,14 +112,14 @@ void app_loop(void)
         }
     }
 
-    if (app_exec_count++ > 1000)
+    if (app_exec_count++ > 2000)
     {
         app_exec_count = 0;
 
-        LED1_TOGGLE;
-        LED2_TOGGLE;
+        LED1_RUN_TOGGLE;
+        LED2_RUN_TOGGLE;
 
-        printf("time: %s:%s, app is running\r\n", __DATE__, __TIME__);
+        sfud_log_info("time: %s:%s, app is running\r\n", __DATE__, __TIME__);
     }
 }
 
