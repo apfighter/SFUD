@@ -1044,14 +1044,14 @@ sfud_err sfud_write_status(const sfud_flash *flash, bool is_volatile, uint8_t st
     return result;
 }
 
-sfud_err sfud_device_register(char *device_name, sfud_flash *flash)
+sfud_err sfud_device_ops_register(char *device_name, sfud_flash *flash)
 {
     size_t i;
 
     for (i = 0; i < sizeof(flash_table) / sizeof(sfud_flash); i++) {
         if (strcmp(flash_table[i].name, device_name) == 0) {
             flash_table[i].spi = flash->spi;
-            flash_table[i].spi.user_data = NULL;
+            flash_table[i].spi.user_data = flash->spi.user_data;
             /* about 100 microsecond delay */
             flash_table[i].retry.delay = flash->retry.delay;
             /* adout 60 seconds timeout */

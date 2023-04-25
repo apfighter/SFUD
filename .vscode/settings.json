@@ -5,6 +5,9 @@
         "app.h": "c",
         "stm32f7xx_hal.h": "c",
         "cmsis_os.h": "c",
-        "sfud_def.h": "c"
+        "sfud_def.h": "c",
+        "sfud_cfg.h": "c",
+        "sfud.h": "c",
+        "sfud_flash_def.h": "c"
     }
 }

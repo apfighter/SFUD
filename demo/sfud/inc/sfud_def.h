@@ -40,6 +40,9 @@
 extern "C" {
 #endif
 
+extern void sfud_log_debug(const char *file, const long line, const char *format, ...);
+extern void sfud_log_info(const char *format, ...);
+
 /* debug print function. Must be implement by user. */
 #ifdef SFUD_DEBUG_MODE
 #ifndef SFUD_DEBUG

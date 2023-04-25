@@ -179,7 +179,7 @@ sfud_err sfud_write_status(const sfud_flash *flash, bool is_volatile, uint8_t st
  *
  * @return result
  */
-sfud_err sfud_device_register(char *device_name, sfud_flash *flash);
+sfud_err sfud_device_ops_register(char *device_name, sfud_flash *flash);
 
 #ifdef __cplusplus
 }

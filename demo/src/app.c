@@ -3,7 +3,6 @@
 #include "string.h"
 #include "sfud.h"
 
-
 static inline void spi_lock(const sfud_spi *spi)
 {
     __disable_irq();
@@ -17,8 +16,7 @@ static inline void spi_unlock(const sfud_spi *spi)
 /**
  * SPI write data then read data
  */
-static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, size_t write_size, uint8_t *read_buf,
-                               size_t read_size)
+static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, size_t write_size, uint8_t *read_buf, size_t read_size)
 {
     sfud_err result = SFUD_SUCCESS;
     uint8_t send_data, read_data;
@@ -61,27 +59,8 @@ static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, si
     return result;
 }
 
-#ifdef SFUD_USING_QSPI
-
-/**
- * read flash data by QSPI
- */
-static sfud_err qspi_read(const struct __sfud_spi *spi, uint32_t addr, sfud_qspi_read_cmd_format *qspi_read_cmd_format,
-                          uint8_t *read_buf, size_t read_size)
-{
-    sfud_err result = SFUD_SUCCESS;
-
-    /**
-     * add your qspi read flash data code
-     */
-
-    return result;
-}
-
-#endif /* SFUD_USING_QSPI */
-
 static void retry_delay_100us()
-{ // TODO
+{
     uint32_t delay = 120;
     while (delay--);
 }
@@ -91,7 +70,7 @@ static void sfud_demo(uint32_t addr, size_t size, uint8_t *data);
 static uint8_t sfud_demo_test_buf[SFUD_DEMO_TEST_BUFFER_SIZE];
 
 static uint32_t app_exec_count = 0;
-static uint32_t sfud_inited = 0;
+static uint32_t sfud_inited    = 0;
 
 static sfud_flash flash;
 
@@ -99,29 +78,26 @@ void app_loop(void)
 {
     if (sfud_inited == 0)
     {
-
-        flash.spi.wr = spi_write_read;
-        flash.spi.lock = spi_lock;
+        flash.spi.wr     = spi_write_read;
+        flash.spi.lock   = spi_lock;
         flash.spi.unlock = spi_unlock;
 #ifdef SFUD_USING_QSPI
-        flash.spi.qspi_read = qspi_read;
+        flash.spi.qspi_read = NULL;
 #endif
         flash.spi.user_data = NULL;
-        /* about 100 microsecond delay */
-        flash.retry.delay = retry_delay_100us;
-        /* adout 60 seconds timeout */
-        flash.retry.times = 60 * 10000;
+        flash.retry.delay   = retry_delay_100us;  /* about 100 microsecond delay */
+        flash.retry.times   = 60 * 10000;         /* adout 60 seconds timeout */
 
-        sfud_device_register("MX25L128", &flash);
+        sfud_device_ops_register(SFUD_FLASH_MX25L128, &flash);
 
         sfud_inited = 1;
 
-        /* SFUD initialize */
-        if (sfud_init() == SFUD_SUCCESS)
+        if (sfud_init() == SFUD_SUCCESS) /* SFUD initialize */
         {
             sfud_demo(0, sizeof(sfud_demo_test_buf), sfud_demo_test_buf);
         }
     }
+
     if (app_exec_count++ > 1000)
     {
         app_exec_count = 0;
@@ -142,8 +118,8 @@ void app_loop(void)
  */
 static void sfud_demo(uint32_t addr, size_t size, uint8_t *data)
 {
-    sfud_err result = SFUD_SUCCESS;
-    const sfud_flash *flash = sfud_get_device_table() + 0;
+    sfud_err result            = SFUD_SUCCESS;
+    const    sfud_flash *flash = sfud_get_device_table() + 0;
     size_t i;
 
     /* prepare write data */
