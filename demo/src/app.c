@@ -10,9 +10,11 @@ static uint8_t sfud_demo_test_buf[SFUD_DEMO_TEST_BUFFER_SIZE];
 static uint32_t app_exec_count = 0;
 static uint32_t sfud_inited    = 0;
 
+extern void lfs_test(void);
+
 void app_loop(void)
 {
-    if (sfud_inited == 0)
+    if (sfud_inited == 1)
     {
         sfud_inited = 1;
 
@@ -25,6 +27,8 @@ void app_loop(void)
     if (app_exec_count++ > 2000)
     {
         app_exec_count = 0;
+
+        lfs_test();
 
         LED1_RUN_TOGGLE;
         LED2_RUN_TOGGLE;
