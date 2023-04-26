@@ -98,6 +98,8 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm3272xx_freertos/src}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm3272xx_freertos/sfud/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm3272xx_freertos/littlefs}&quot;"/>
                                     								
                                 </option>
                                 								
@@ -156,6 +158,8 @@
                         <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
                         						
                         <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
+                        						
+                        <entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="littlefs"/>
                         						
                         <entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="sfud"/>
                         						
