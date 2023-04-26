@@ -51,15 +51,6 @@ static int lfs_deskio_sync(const struct lfs_config *c)
     return LFS_ERR_OK;
 }
 
-// 静态内存使用方式必须设定这四个缓存
-// __align(4) static uint8_t read_buffer[16];
-// __align(4) static uint8_t prog_buffer[16];
-// __align(4) static uint8_t lookahead_buffer[16];
-
-// static uint8_t read_buffer[16];
-// static uint8_t prog_buffer[16];
-// static uint8_t lookahead_buffer[16];
-
 // lfs句柄
 lfs_t lfs_w25qxx;
 
@@ -81,11 +72,6 @@ const struct lfs_config cfg =
     .cache_size     = 16,
     .lookahead_size = 16,
     .block_cycles   = 500,
-
-    // 使用静态内存必须设置这几个缓存
-    // .read_buffer      = read_buffer,
-    // .prog_buffer      = prog_buffer,
-    // .lookahead_buffer = lookahead_buffer,
 };
 
 // entry point
