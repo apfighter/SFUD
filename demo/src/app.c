@@ -14,7 +14,7 @@ extern void lfs_test(void);
 
 void app_loop(void)
 {
-    if (sfud_inited == 1)
+    if (sfud_inited == 0)
     {
         sfud_inited = 1;
 
@@ -28,7 +28,7 @@ void app_loop(void)
     {
         app_exec_count = 0;
 
-        lfs_test();
+        // lfs_test();
 
         LED1_RUN_TOGGLE;
         LED2_RUN_TOGGLE;
