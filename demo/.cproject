@@ -100,6 +100,8 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm3272xx_freertos/sfud/inc}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm3272xx_freertos/littlefs}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm3272xx_freertos/fat32}&quot;"/>
                                     								
                                 </option>
                                 								
@@ -158,6 +160,8 @@
                         <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
                         						
                         <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
+                        						
+                        <entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="fat32"/>
                         						
                         <entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="littlefs"/>
                         						
