@@ -12,6 +12,10 @@ static uint32_t sfud_inited    = 0;
 
 extern void lfs_test(void);
 
+static uint8_t test_data = 0;
+static uint8_t rx_test_buf[256];
+static uint8_t tx_test_buf[256];
+
 void app_loop(void)
 {
     if (sfud_inited == 0)
@@ -26,6 +30,7 @@ void app_loop(void)
 
     if (app_exec_count++ > 2000)
     {
+        test_data++;
         app_exec_count = 0;
 
         // lfs_test();
@@ -33,7 +38,19 @@ void app_loop(void)
         LED1_RUN_TOGGLE;
         LED2_RUN_TOGGLE;
 
-        sfud_log_info("time: %s:%s, app is running\r\n", __DATE__, __TIME__);
+        W25QXX_Read((uint8_t *)rx_test_buf, 0, sizeof(rx_test_buf));
+        for (uint8_t i=0; i<16; i++)
+        {
+            printf("%d ", rx_test_buf[i]);
+        }
+        printf("\r\n");
+
+        memset(tx_test_buf, test_data, sizeof(tx_test_buf));
+        W25QXX_Write((uint8_t *)tx_test_buf, 0, sizeof(tx_test_buf));
+
+        sfud_log_info("time: %s:%s, app is running", __DATE__, __TIME__);
+
+        printf("\r\n");
     }
 }
 
