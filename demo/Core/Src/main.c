@@ -121,6 +121,7 @@ int main(void)
   MX_SPI4_Init();
   MX_UART7_Init();
   /* USER CODE BEGIN 2 */
+//   W25QXX_Erase_Chip();
   W25QXX_Init();
   printf("W25QXX Init:%04X\r\n", W25QXX_ReadID());
   /* USER CODE END 2 */
