@@ -17,6 +17,8 @@
 #define MX25_CS_HIGH()   HAL_GPIO_WritePin(M25X_CS_GPIO_Port, M25X_CS_Pin, GPIO_PIN_SET)
 #define MX25_CS_LOW()    HAL_GPIO_WritePin(M25X_CS_GPIO_Port, M25X_CS_Pin, GPIO_PIN_RESET)
 
+#define FLASH_SECTOR_SIZE (4096)
+
 void app_loop(void);
 
 #endif //__APP_H

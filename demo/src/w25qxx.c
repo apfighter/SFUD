@@ -93,6 +93,8 @@ uint16_t W25QXX_ReadID(void)
 // NumByteToRead:要读取的字节数(最大65535)
 void W25QXX_Read(uint8_t *pBuffer, uint32_t ReadAddr, uint16_t NumByteToRead)
 {
+    printf("read addr=0x%x, size=0x%x\r\n", ReadAddr, NumByteToRead);
+
     uint16_t i;
 
     W25QXX_Wait_Busy();
@@ -170,6 +172,7 @@ void W25QXX_Write_NoCheck(uint8_t *pBuffer, uint32_t WriteAddr, uint16_t NumByte
 uint8_t W25QXX_BUFFER[4096];
 void W25QXX_Write(uint8_t *pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite)
 {
+    printf("write addr=0x%x, size=0x%x\r\n", WriteAddr, NumByteToWrite);
     uint32_t secpos;
     uint16_t secoff;
     uint16_t secremain;
@@ -236,6 +239,7 @@ void W25QXX_Erase_Chip(void)
 // 擦除一个山区的最少时间:150ms
 void W25QXX_Erase_Sector(uint32_t Dst_Addr)
 {
+    printf("erase addr=0x%x\r\n", Dst_Addr);
     W25QXX_Write_Enable(); // SET WEL
     W25QXX_Wait_Busy();
     MX25_CS_LOW();                                   // 使能器件

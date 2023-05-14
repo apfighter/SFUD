@@ -120,6 +120,9 @@ DRESULT disk_read (
     UNUSED(buff);
     UNUSED(sector);
     UNUSED(count);
+
+    W25QXX_Read((BYTE *)buff, sector * FLASH_SECTOR_SIZE, count * FLASH_SECTOR_SIZE);
+
     return RES_OK;
 
     #if 0
@@ -177,6 +180,10 @@ DRESULT disk_write (
     UNUSED(buff);
     UNUSED(sector);
     UNUSED(count);
+
+    W25QXX_Erase_Sector(sector * FLASH_SECTOR_SIZE);
+    W25QXX_Write((BYTE *)buff, sector * FLASH_SECTOR_SIZE, count * FLASH_SECTOR_SIZE);
+
     return RES_OK;
 
     #if 0
@@ -230,8 +237,24 @@ DRESULT disk_ioctl (
 )
 {
     UNUSED(pdrv);
-    UNUSED(cmd);
-    UNUSED(buff);
+
+    switch (cmd) {
+    /* 扇区数量：4096*4096/1024/1024=16(MB) */
+    case GET_SECTOR_COUNT:
+        *(DWORD * )buff = 4096; // w25q128 4096 扇区
+        break;
+
+    /* 扇区大小  */
+    case GET_SECTOR_SIZE :
+        *(WORD * )buff = 4096;
+        break;
+
+    /* 同时擦除扇区个数 */
+    case GET_BLOCK_SIZE :
+        *(DWORD * )buff = 1;
+        break;
+    }
+
     return RES_OK;
 
     #if 0

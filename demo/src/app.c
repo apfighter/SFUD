@@ -4,7 +4,7 @@
 #include "sfud.h"
 #include "ff.h"
 
-#define SFUD_DEMO_TEST_BUFFER_SIZE 1024
+#define SFUD_DEMO_TEST_BUFFER_SIZE 32
 static void sfud_demo(uint32_t addr, size_t size, uint8_t *data);
 static uint8_t sfud_demo_test_buf[SFUD_DEMO_TEST_BUFFER_SIZE];
 
@@ -17,6 +17,100 @@ extern void lfs_test(void);
 // static uint8_t rx_test_buf[256];
 // static uint8_t tx_test_buf[256];
 
+FATFS fs_obj;             /* Filesystem object */
+
+void fs_test(void)
+{
+    FIL fil;              /* File object */
+    FRESULT res;          /* API result code */
+    UINT bw;              /* Bytes written */
+    BYTE mm[512];
+    UINT i;
+
+    printf("fatfs test start:\r\n");
+    /* 挂载文件系统 */
+    res = f_mount(&fs_obj, "0:", 1);
+    if (res)
+    {
+        printf("fatfs mount fail.\r\n");
+        /* 格式化文件系统 */
+        res = f_mkfs("0:", 0, 0); //"0:"是卷标，来自于 #define SPI_FLASH 0
+        if (res)
+        {
+            printf("fatfs format fail.\r\n");
+            return;
+        }
+        else
+        {
+            printf("fatfs format success.\r\n");
+            f_mount(NULL, "0:", 1);
+            res = f_mount(&fs_obj, "0:", 1);
+            if (res)
+            {
+                printf("fatfs mount fail.\r\n");
+            }
+            else
+            {
+                printf("fatfs mount success.\r\n");
+            }
+        }
+    }
+    else
+    {
+        printf("fatfs mount success.\r\n");
+    }
+    /* Create a file as new */
+    res = f_open(&fil, "0:/1.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ);
+    if (res)
+    {
+        printf("fatfs file open fail. res = %d\r\n", res);
+        return;
+    }
+    else
+    {
+        printf("fatfs file open success.\r\n");
+    }
+    /* Write a message */
+    for (uint32_t i=0; i<128; i++)
+    {
+        mm[i] = i;
+    }
+    res = f_write(&fil, mm, 128, &bw);
+    // printf("res write:%d\r\n",res);
+    if (bw == 128)
+    {
+        printf("fatfs file write success!\r\n");
+    }
+    else
+    {
+        printf("fatfs file write fail!\r\n");
+        return;
+    }
+    res = f_size(&fil);
+    printf("file size: %d Bytes.\r\n", res);
+    memset(mm, 0x0, 128);
+    f_lseek(&fil, 0);
+    res = f_read(&fil, mm, 128, &i);
+    if (res == FR_OK)
+    {
+        printf("fatfs read file success!\r\n");
+        printf("read szie: %d Bytes.\r\n", i);
+    }
+    else
+    {
+        printf("fatfs read file fail!\r\n");
+    }
+    for (uint32_t i=0; i<32; i++)
+    {
+        printf("0x%x ", mm[i]);
+    }
+    printf("\r\n");
+    /* Close the file */
+    f_close(&fil);
+    /*卸载文件系统*/
+    printf("fatfs test ok.\r\n");
+}
+
 void app_loop(void)
 {
     if (sfud_inited == 0)
@@ -25,8 +119,10 @@ void app_loop(void)
 
         if (sfud_init() == SFUD_SUCCESS) /* SFUD initialize */
         {
-            sfud_demo(0, sizeof(sfud_demo_test_buf), sfud_demo_test_buf);
-
+            uint32_t i=100000;
+            while(i--);
+            // sfud_demo(0, sizeof(sfud_demo_test_buf), sfud_demo_test_buf);
+            fs_test();
         }
     }
 
