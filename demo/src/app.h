@@ -4,6 +4,7 @@
 #include "main.h"
 #include "w25qxx.h"
 #include "stdio.h"
+#include "stm32f7xx_hal_def.h"
 
 #define LED1_RUN_ON      HAL_GPIO_WritePin(GPIOD, LED1_Pin, GPIO_PIN_RESET)
 #define LED1_RUN_OFF     HAL_GPIO_WritePin(GPIOD, LED1_Pin, GPIO_PIN_SET)

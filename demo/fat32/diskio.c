@@ -8,9 +8,10 @@
 /*-----------------------------------------------------------------------*/
 
 #include "diskio.h"		/* FatFs lower layer API */
-#include "usbdisk.h"	/* Example: Header file of existing USB MSD control module */
-#include "atadrive.h"	/* Example: Header file of existing ATA harddisk control module */
-#include "sdcard.h"		/* Example: Header file of existing MMC/SDC contorl module */
+// #include "usbdisk.h"	/* Example: Header file of existing USB MSD control module */
+// #include "atadrive.h"	/* Example: Header file of existing ATA harddisk control module */
+// #include "sdcard.h"		/* Example: Header file of existing MMC/SDC contorl module */
+#include "app.h"
 
 /* Definitions of physical drive number for each drive */
 #define ATA		0	/* Example: Map ATA harddisk to physical drive 0 */
@@ -26,6 +27,10 @@ DSTATUS disk_status (
 	BYTE pdrv		/* Physical drive nmuber to identify the drive */
 )
 {
+    UNUSED(pdrv);
+    return RES_OK;
+
+    #if 0
 	DSTATUS stat;
 	int result;
 
@@ -52,6 +57,7 @@ DSTATUS disk_status (
 		return stat;
 	}
 	return STA_NOINIT;
+    #endif
 }
 
 
@@ -64,6 +70,10 @@ DSTATUS disk_initialize (
 	BYTE pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
+    UNUSED(pdrv);
+    return RES_OK;
+
+    #if 0
 	DSTATUS stat;
 	int result;
 
@@ -90,6 +100,7 @@ DSTATUS disk_initialize (
 		return stat;
 	}
 	return STA_NOINIT;
+    #endif
 }
 
 
@@ -105,6 +116,13 @@ DRESULT disk_read (
 	UINT count		/* Number of sectors to read */
 )
 {
+    UNUSED(pdrv);
+    UNUSED(buff);
+    UNUSED(sector);
+    UNUSED(count);
+    return RES_OK;
+
+    #if 0
 	DRESULT res;
 	int result;
 
@@ -138,6 +156,7 @@ DRESULT disk_read (
 	}
 
 	return RES_PARERR;
+    #endif
 }
 
 
@@ -154,6 +173,13 @@ DRESULT disk_write (
 	UINT count			/* Number of sectors to write */
 )
 {
+    UNUSED(pdrv);
+    UNUSED(buff);
+    UNUSED(sector);
+    UNUSED(count);
+    return RES_OK;
+
+    #if 0
 	DRESULT res;
 	int result;
 
@@ -187,6 +213,7 @@ DRESULT disk_write (
 	}
 
 	return RES_PARERR;
+    #endif
 }
 #endif
 
@@ -202,6 +229,12 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
+    UNUSED(pdrv);
+    UNUSED(cmd);
+    UNUSED(buff);
+    return RES_OK;
+
+    #if 0
 	DRESULT res;
 	int result;
 
@@ -226,5 +259,6 @@ DRESULT disk_ioctl (
 	}
 
 	return RES_PARERR;
+    #endif
 }
 #endif

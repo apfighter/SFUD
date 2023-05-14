@@ -89,7 +89,7 @@ void lfs_test(void)
     }
 
     // read current count
-    uint32_t boot_count = 0;
+    int boot_count = 0;
     lfs_file_open(&lfs_w25qxx, &lfs_file_w25qxx, "boot_count", LFS_O_RDWR | LFS_O_CREAT);
     lfs_file_read(&lfs_w25qxx, &lfs_file_w25qxx, &boot_count, sizeof(boot_count));
 

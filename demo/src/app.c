@@ -13,9 +13,9 @@ static uint32_t sfud_inited    = 0;
 
 extern void lfs_test(void);
 
-static uint8_t test_data = 0;
-static uint8_t rx_test_buf[256];
-static uint8_t tx_test_buf[256];
+// static uint8_t test_data = 0;
+// static uint8_t rx_test_buf[256];
+// static uint8_t tx_test_buf[256];
 
 void app_loop(void)
 {
@@ -32,7 +32,7 @@ void app_loop(void)
 
     if (app_exec_count++ > 2000)
     {
-        test_data++;
+        // test_data++;
         app_exec_count = 0;
 
         // lfs_test();
