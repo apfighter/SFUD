@@ -28,11 +28,16 @@ void fs_test(void)
     UINT i;
 
     printf("fatfs test start:\r\n");
+    // fs_obj.win = (BYTE *)malloc(4096);
+    // if (fs_obj.win == NULL)
+    // {
+    //     printf("fat32 malloc fail\r\n");
+    // }
     /* 挂载文件系统 */
     res = f_mount(&fs_obj, "0:", 1);
     if (res)
     {
-        printf("fatfs mount fail.\r\n");
+        printf("fatfs mount fail. res = %d\r\n", res);
         /* 格式化文件系统 */
         res = f_mkfs("0:", 0, 0); //"0:"是卷标，来自于 #define SPI_FLASH 0
         if (res)
@@ -108,9 +113,11 @@ void fs_test(void)
     /* Close the file */
     f_close(&fil);
     /*卸载文件系统*/
+    f_mount(NULL, "0:", 1);
     printf("fatfs test ok.\r\n");
 }
 
+static uint8_t fat_flag = 0;
 void app_loop(void)
 {
     if (sfud_inited == 0)
@@ -119,15 +126,18 @@ void app_loop(void)
 
         if (sfud_init() == SFUD_SUCCESS) /* SFUD initialize */
         {
-            uint32_t i=100000;
-            while(i--);
             // sfud_demo(0, sizeof(sfud_demo_test_buf), sfud_demo_test_buf);
-            fs_test();
+            // fs_test();
         }
     }
 
     if (app_exec_count++ > 2000)
     {
+        if (fat_flag == 0)
+        {
+            fat_flag = 1;
+            fs_test();
+        }
         // test_data++;
         app_exec_count = 0;
 
